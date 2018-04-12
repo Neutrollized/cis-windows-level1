@@ -1,0 +1,9 @@
+name: cis-windows-level1
+title: Cis-windows-level1 Ansible Role
+maintainer: Glen Yu
+copyright_email: glen.yu@gmail.com
+license: MIT
+summary: Verify that Ansible has configured Cis-windows-level1 correctly.
+version: 1.0.0
+supports:
+- os-family: windows

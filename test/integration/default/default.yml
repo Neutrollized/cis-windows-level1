@@ -1,0 +1,5 @@
+---
+- hosts: kitchen-windows
+
+  roles:
+  - role: cis-windows-level1

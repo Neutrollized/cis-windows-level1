@@ -1,0 +1,50 @@
+---
+<% winrm_port=rand(55986..59986) %>
+driver:
+  name: vagrant
+  gui: false
+
+platforms:
+  - name: windows
+    os_type: windows
+    driver_config:
+      box: win2012r2
+      box_url: ## YOUR VAGRANT BOX DOWNLOAD URL HERE ###
+      box_download_insecure: true
+      communicator: winrm
+      username: packer
+      password: packer
+      network:
+        - ["forwarded_port", {guest: 5986, host: <%= winrm_port %>}]
+      port: <%= winrm_port %>
+      customize:
+        cpus: 2
+        memory: 4096
+      provision: false
+    transport:
+      name: winrm
+      winrm_transport: negotiate
+
+
+provisioner:
+  name: ansible_push
+  ansible_config: test/ansible.cfg
+  playbook: test/integration/default/default.yml
+  verbose: vvv
+  mygroup: kitchen-windows
+  diff: true
+  host_key_checking: false
+  ansible_connection: winrm
+  ansible_port: <%= winrm_port %>
+  generate_inv: true
+  use_instance_name: false
+  chef_bootstrap_url: nil
+
+
+verifier:
+  name: inspec
+  format: junit
+  output: "%{platform}_%{suite}_inspec.xml"
+
+suites:
+  - name: default

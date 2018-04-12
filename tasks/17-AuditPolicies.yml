@@ -1,0 +1,27 @@
+---
+- name: Audit Policies
+  win_audit_policy_system:
+    subcategory: "{{ item.name }}"
+    audit_type: "{{ item.type }}"
+  with_items:
+  - { rule: 17.1.1, name: 'Credential Validation', type: 'success, failure' }
+  - { rule: 17.2.1, name: 'Application Group Management', type: 'success, failure' }
+  - { rule: 17.2.2, name: 'Computer Account Management', type: 'success, failure' }
+  - { rule: 17.2.4, name: 'Other Account Management Events', type: 'success, failure' }
+  - { rule: 17.2.5, name: 'Security Group Management', type: 'success, failure' }
+  - { rule: 17.2.6, name: 'User Account Management', type: 'success, failure' }
+  - { rule: 17.3.1, name: 'Process Creation', type: 'success' }
+  - { rule: 17.5.1, name: 'Account Lockout', type: 'success' }
+  - { rule: 17.5.2, name: 'Logoff', type: 'success' }
+  - { rule: 17.5.3, name: 'Logon', type: 'success, failure' }
+  - { rule: 17.5.4, name: 'Other Logon/Logoff Events', type: 'success, failure' }
+  - { rule: 17.5.5, name: 'Special Logon', type: 'success' }
+  - { rule: 17.6.1, name: 'Removable Storage', type: 'success, failure' }
+  - { rule: 17.7.1, name: 'Audit Policy Change', type: 'success, failure' }
+  - { rule: 17.7.2, name: 'Authentication Policy Change', type: 'success' }
+  - { rule: 17.8.1, name: 'Sensitive Privilege Use', type: 'success, failure' }
+  - { rule: 17.9.1, name: 'IPsec Driver', type: 'success, failure' }
+  - { rule: 17.9.2, name: 'Other System Events', type: 'success, failure' }
+  - { rule: 17.9.3, name: 'Security State Change', type: 'success' }
+  - { rule: 17.9.4, name: 'Security System Extension', type: 'success, failure' }
+  - { rule: 17.9.5, name: 'System Integrity', type: 'success, failure' }

@@ -1,0 +1,446 @@
+---
+- name: Windows Personaization
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\Personalization'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.1.1, name: NoLockScreenCamera, data: 1, type: dword }
+  - { rule: 18.1.1.2, name: NoLockScreenSlideshow, data: 1, type: dword }
+
+- name: Winlogon GPExtensions
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.2.1, name: DllName, data: 'C:\Program Files\LAPS\CSE\AdmPwd.dll', type: string }
+
+- name: Admin Passowrd
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.2.2, name: PwdExpirationProtectionEnabled, data: 1, type: dword }
+  - { rule: 18.2.3, name: AdmPwdEnabled, data: 1, type: dword }
+  - { rule: 18.2.4, name: PasswordComplexity, data: 4, type: dword }
+  - { rule: 18.2.5, name: PasswordLength, data: 15, type: dword }
+  - { rule: 18.2.6, name: PasswordAgeDays, data: 30, type: dword }
+
+- name: Winlogon
+  win_regedit:
+    path: 'HKLM:\{{ item.path }}\Microsoft\Windows NT\CurrentVersion\Winlogon'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.3.1, path: SOFTWARE, name: AutoAdminLogon, data: '0', type: string }
+  - { rule: 18.3.9, path: Software, name: ScreenSaverGracePeriod, data: 5, type: dword }
+
+- name: TCP/IP
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Services\{{ item.path }}\Parameters'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.3.2, path: Tcpip6, name: DisableIPSourceRouting, data: 2, type: dword }
+  - { rule: 18.3.3, path: Tcpip, name: DisableIPSourceRouting, data: 2, type: dword }
+  - { rule: 18.3.4, path: Tcpip, name: EnableICMPRedirect, data: 0, type: dword }
+
+- name: NetBT
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Services\NetBT\Parameters'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.3.6, name: nonamereleaseondemand, data: 1, type: dword }
+
+- name: Session Manager
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Control\Session Manager'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.3.8, name: SafeDllSearchMode, data: 1, type: dword }
+
+- name: Eventlog Security
+  win_regedit:
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Eventlog\Security'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.3.12, name: WarningLevel, data: 90, type: dword }
+
+- name: Network Connections
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.4.11.2, name: NC_AllowNetBridge_NLA, data: 0, type: dword }
+  - { rule: 18.4.11.3, name: NC_StdDomainUserSetLocation, data: 1, type: dword }
+
+- name: Network Provider Hardened Paths
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.4.14.1, name: '\\*\NETLOGON', data: '', type: string }
+  - { rule: 18.4.14.1, name: '\\*\SYSVOL', data: '', type: string }
+
+- name: Group Policy
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\WcmSvc\GroupPolicy'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.4.21.1, name: fMinimizeConnections, data: 1, type: dword }
+
+# if you're WinRM'ing in with a local account as I am,
+# this will cause your kitchen converge to fail if set to 0
+#- name: System Policies
+#  win_regedit:
+#    path: 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+#    name: "{{ item.name }}"
+#    data: "{{ item.data }}"
+#    type: "{{ item.type }}"
+#    state: present
+#  with_items:
+#  - { rule: 18.6.1, name: LocalAccountTokenFilterPolicy, data: 0, type: dword }
+
+- name: WDigest
+  win_regedit:
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.6.2, name: UseLogonCredential, data: 0, type: dword }
+
+- name: System Audit
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.8.3.1, name: ProcessCreationIncludeCmdLine_Enabled, data: 0, type: dword }
+
+- name: Early Launch
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Policies\EarlyLaunch'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.8.12.1, name: DriverLoadPolicy, data: 3, type: dword }
+
+- name: Group Policy
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.8.19.2, name: NoBackgroundPolicy, data: 0, type: dword }
+  - { rule: 18.8.19.3, name: NoGPOListChanges, data: 0, type: dword }
+
+- name: System Policy
+  win_regedit:
+    path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System'
+    name: "{{ item.name }}"
+    state: absent
+    delete_key: yes
+  with_items:
+  - { rule: 18.8.19.4, name: DisableBkGrndGroupPolicy }
+
+- name: System Policy
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\System'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.8.25.1, name: DontDisplayNetworkSelectionUI, data: 1, type: dword }
+  - { rule: 18.8.25.2, name: DontEnumerateConnectedUsers, data: 1, type: dword }
+  - { rule: 18.8.25.3, name: EnumerateLocalUsers, data: 0, type: dword }
+  - { rule: 18.8.25.4, name: DisableLockScreenAppNotifications, data: 1, type: dword }
+  - { rule: 18.8.25.5, name: AllowDomainPINLogon, data: 0, type: dword }
+  - { rule: 18.9.30.2, name: EnableSmartScreen, data: 2, type: dword }
+
+- name: Terminal Services
+  win_regedit:
+    path: 'HKLM:\{{ item.path }}\Microsoft\Windows NT\Terminal Services'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.8.31.1, path: 'Software\policies', name: fAllowUnsolicited, data: 0, type: dword }
+  - { rule: 18.8.31.2, path: 'Software\policies', name: fAllowToGetHelp, data: 0, type: dword }
+  - { rule: 18.9.52.2.2, path: 'SOFTWARE\Policies', name: DisablePasswordSaving, data: 1, type: dword }
+  - { rule: 18.9.52.3.3.2, path: 'SOFTWARE\Policies', name: fDisableCdm, data: 1, type: dword }
+  - { rule: 18.9.52.3.9.1, path: 'SOFTWARE\Policies', name: fPromptForPassword, data: 1, type: dword }
+  - { rule: 18.9.52.3.9.2, path: 'SOFTWARE\Policies', name: fEncryptRPCTraffic, data: 1, type: dword }
+  - { rule: 18.9.52.3.9.3, path: 'SOFTWARE\Policies', name: MinEncryptionLevel, data: 3, type: dword }
+  - { rule: 18.9.52.3.11.1, path: 'SOFTWARE\Policies', name: DeleteTempDirsOnExit, data: 1, type: dword }
+  - { rule: 18.9.52.3.11.2, path: 'SOFTWARE\Policies', name: PerSessionTempDir, data: 1, type: dword }
+
+- name: Rpc
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows NT\Rpc'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.8.32.1, name: EnableAuthEpResolution, data: 1, type: dword }
+
+- name: System
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.6.1, name: MSAOptional, data: 1, type: dword }
+
+- name: Explorer
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\Explorer'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.8.1, name: NoAutoplayfornonVolume, data: 1, type: dword }
+  - { rule: 18.9.30.3, name: NoDataExecutionPrevention, data: 0, type: dword }
+  - { rule: 18.9.30.4, name: NoHeapTerminationOnCorruption, data: 0, type: dword }
+
+- name: Explorer
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.8.2, name: NoAutorun, data: 1, type: dword }
+  - { rule: 18.9.8.3, name: NoDriveTypeAutoRun, data: 255, type: dword }
+
+- name: CredUI
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\CredUI'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.15.1, name: DisablePasswordReveal, data: 1, type: dword }
+
+- name: CredUI
+  win_regedit:
+    path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\CredUI'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.15.2, name: EnumerateAdministrators, data: 0, type: dword }
+
+- name: EMET
+  win_regedit:
+    path: 'HKLM:\SYSTEM\CurrentControlSet\services\EMET_Service'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.24.1, name: Start, data: 2, type: dword }
+
+- name: EMET SysSettings
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\EMET\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.24.2, path: SysSettings, name: AntiDetours, data: 1, type: dword }
+  - { rule: 18.9.24.2, path: SysSettings, name: BannedFunctions, data: 1, type: dword }
+  - { rule: 18.9.24.2, path: SysSettings, name: DeepHooks, data: 1, type: dword }
+  - { rule: 18.9.24.2, path: SysSettings, name: ExploitAction, data: 2, type: dword }
+  - { rule: 18.9.24.3, path: Defaults, name: '*\Internet Explorer\iexplore.exe', data: '+EAF+ eaf_modules:mshtml.dll;flash*.ocx;jscript*.dll;vbscript.dll;vgx.dll +ASR asr_modules:npjpi*.dll;jp2iexp.dll;vgx.dll;msxml4*.dll;wshom.ocx;scrrun.dll;vbscript.dll asr_zones:1;2', type: string }
+  - { rule: 18.9.24.3, path: Defaults, name: '*\Mozilla Thunderbird\thunderbird.exe', data: '', type: string }
+  - { rule: 18.9.24.5, path: Defaults, name: '*\Java\jre*\bin\javaws.exe', data: '-HeapSpray', type: string }
+  - { rule: 18.9.24.6, path: SysSettings, name: ASLR, data: 3, type: dword }
+  - { rule: 18.9.24.7, path: SysSettings, name: DEP, data: 2, type: dword }
+  - { rule: 18.9.24.8, path: SysSettings, name: SEHOP, data: 2, type: dword }
+
+- name: Event Log
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\EventLog\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.26.1.1, path: Application, name: Retention, data: '0', type: string }
+  - { rule: 18.9.26.1.2, path: Application, name: MaxSize, data: 32768, type: dword }
+  - { rule: 18.9.26.2.1, path: Security, name: Retention, data: '0', type: string }
+  - { rule: 18.9.26.2.2, path: Security, name: MaxSize, data: 196608, type: dword }
+  - { rule: 18.9.26.3.1, path: Setup, name: Retention, data: '0', type: string }
+  - { rule: 18.9.26.3.2, path: Setup, name: MaxSize, data: 32768, type: dword }
+  - { rule: 18.9.26.4.1, path: System, name: Retention, data: '0', type: string }
+  - { rule: 18.9.26.4.2, path: System, name: MaxSize, data: 32768, type: dword }
+
+- name: Explorer Policies
+  win_regedit:
+    path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.30.5, name: PreXPSP2ShellProtocolBehavior, data: 0, type: dword }
+
+- name: Skydrive
+  win_regedit:
+    path: 'HKLM:\{{ item.path }}\Policies\Microsoft\Windows\Skydrive'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.47.1, path: Software, name: DisableFileSync, data: 1, type: dword }
+  - { rule: 18.9.47.2, path: SOFTWARE, name: DisableFileSync, data: 1, type: dword }
+
+- name: IE
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.53.1, name: DisableEnclosureDownload, data: 1, type: dword }
+
+- name: Windows Search
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.54.2, name: AllowIndexingEncryptedStoresOrItems, data: 0, type: dword }
+
+- name: Windows Store
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.61.1, name: AutoDownload, data: 4, type: dword }
+  - { rule: 18.9.61.2, name: DisableOSUpgrade, data: 1, type: dword }
+
+- name: Windows Error Reporting Consent
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting\Consent'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.70.2.1, name: DefaultConsent, data: 1, type: dword }
+
+- name: Windows Error Reporting
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.70.3, name: AutoApproveOSDumps, data: 0, type: dword }
+  - { rule: 18.9.75.1, name: DisableAutomaticRestartsSignOn, data: 0, type: dword }
+
+- name: Windows Installer
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\Installer'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.74.1, name: EnableUserControl, data: 0, type: dword }
+  - { rule: 18.9.74.2, name: AlwaysInstallElevated, data: 0, type: dword }
+
+- name: PowerShell
+  win_regedit:
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.84.1, path: ScriptBlockLogging, name: EnableScriptBlockLogging, data: 0, type: dword }
+  - { rule: 18.9.84.2, path: Transcription, name: EnableTranscripting, data: 0, type: dword }
+
+- name: WinRM
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\WinRM\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.86.1.1, path: Client, name: AllowBasic, data: 0, type: dword }
+  - { rule: 18.9.86.1.2, path: Client, name: AllowUnencryptedTraffic, data: 0, type: dword }
+  - { rule: 18.9.86.1.3, path: Client, name: AllowDigest, data: 0, type: dword }
+  - { rule: 18.9.86.2.1, path: Service, name: AllowBasic, data: 0, type: dword }
+  - { rule: 18.9.86.2.3, path: Service, name: AllowUnencryptedTraffic, data: 0, type: dword }
+  - { rule: 18.9.86.2.4, path: Service, name: DisableRunAs, data: 1, type: dword }
+
+- name: Windows Update
+  win_regedit:
+    path: 'HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 18.9.90.2, name: NoAutoUpdate, data: 0, type: dword }
+  - { rule: 18.9.90.3, name: ScheduledInstallDay, data: 0, type: dword }
+  - { rule: 18.9.90.4, name: NoAutoRebootWithLoggedOnUsers, data: 0, type: dword }

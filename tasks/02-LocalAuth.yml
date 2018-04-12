@@ -1,0 +1,176 @@
+---
+- name: System Policies
+  win_regedit:
+    path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.1.2, name: NoConnectedUser, data: 3, type: dword }
+  - { rule: 2.3.7.1, name: DontDisplayLastUserName, data: 1, type: dword }
+  - { rule: 2.3.7.2, name: DisableCAD, data: 0, type: dword }
+  - { rule: 2.3.7.3, name: InactivityTimeoutSecs, data: 900, type: dword }
+  - { rule: 2.3.7.4, name: LegalNoticeText, data: '', type: string }
+  - { rule: 2.3.7.5, name: LegalNoticeCaption, data: '', type: string }
+  - { rule: 2.3.13.1, name: ShutdownWithoutLogon, data: 0, type: dword }
+  - { rule: 2.3.17.1, name: FilterAdministratorToken, data: 1, type: dword }
+  - { rule: 2.3.17.2, name: EnableUIADesktopToggle, data: 0, type: dword }
+  - { rule: 2.3.17.3, name: ConsentPromptBehaviorAdmin, data: 2, type: dword }
+  - { rule: 2.3.17.4, name: ConsentPromptBehaviorUser, data: 0, type: dword }
+  - { rule: 2.3.17.5, name: EnableInstallerDetection, data: 1, type: dword }
+  - { rule: 2.3.17.6, name: EnableSecureUIAPaths, data: 1, type: dword }
+  - { rule: 2.3.17.7, name: EnableLUA, data: 1, type: dword }
+  - { rule: 2.3.17.8, name: PromptOnSecureDesktop, data: 1, type: dword }
+  - { rule: 2.3.17.9, name: EnableVirtualization, data: 1, type: dword }
+
+- name: LSA
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Control\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.1.4, path: Lsa, name: LimitBlankPasswordUse, data: 1, type: dword }
+  - { rule: 2.3.2.1, path: Lsa, name: SCENoApplyLegacyAuditPolicy, data: 1, type: dword }
+  - { rule: 2.3.2.2, path: LSA, name: CrashOnAuditFail, data: 0, type: dword }
+  - { rule: 2.3.10.2, path: Lsa, name: RestrictAnonymousSAM, data: 1, type: dword }
+  - { rule: 2.3.10.3, path: Lsa, name: RestrictAnonymous, data: 1, type: dword }
+  - { rule: 2.3.10.5, path: Lsa, name: EveryoneIncludesAnonymous, data: 0, type: dword }
+  - { rule: 2.3.10.11, path: Lsa, name: ForcedGuest, data: 0, type: dword }
+  - { rule: 2.3.11.1, path: Lsa, name: UseMachineId, data: 1, type: dword }
+  - { rule: 2.3.11.2, path: 'Lsa\MSV1_0', name: AllowNullSessionFallback, data: 0, type: dword }
+  - { rule: 2.3.11.3, path: 'Lsa\pku2u', name: AllowOnlineID, data: 0, type: dword }
+  - { rule: 2.3.11.5, path: Lsa, name: NoLMHash, data: 1, type: dword }
+  - { rule: 2.3.11.7, path: Lsa, name: LmCompatibilityLevel, data: 5, type: dword }
+  - { rule: 2.3.11.9, path: 'Lsa\MSV1_0', name: NTLMMinClientSec, data: 537395200, type: dword }
+  - { rule: 2.3.11.10, path: 'Lsa\MSV1_0', name: NTLMMinServerSec, data: 537395200, type: dword }
+
+- name: Disable local accounts
+  win_user:
+    name: "{{ item.name }}"
+    account_disabled: yes
+  with_items:
+  - { rule: 2.3.1.5, name: Administrator }
+  - { rule: 2.3.1.6, name: Guest }
+
+- name: Winlogon
+  win_regedit:
+    path: 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.4.1, name: AllocateDASD, data: '0', type: string }
+  - { rule: 2.3.7.7, name: PasswordExpiryWarning, data: 14, type: dword }
+  - { rule: 2.3.7.7, name: passwordexpirywarning, data: 5, type: dword }
+  - { rule: 2.3.7.8, name: ForceUnlockLogon, data: 1, type: dword }
+  - { rule: 2.3.7.9, name: ScRemoveOption, data: '', type: string }
+
+- name: LanMan Print Services
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.4.2, name: AddPrinterDrivers, data: 1, type: dword }
+
+- name: Netlogon Parameters
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Services\Netlogon\Parameters'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.6.1, name: RequireSignOrSeal, data: 1, type: dword }
+  - { rule: 2.3.6.2, name: SealSecureChannel, data: 1, type: dword }
+  - { rule: 2.3.6.3, name: SignSecureChannel, data: 1, type: dword }
+  - { rule: 2.3.6.4, name: DisablePasswordChange, data: 0, type: dword }
+  - { rule: 2.3.6.5, name: MaximumPasswordAge, data: 30, type: dword }
+  - { rule: 2.3.6.6, name: RequireStrongKey, data: 1, type: dword }
+
+- name: LanMan Parameters
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Services\{{ item.path }}\Parameters'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.8.1, path: LanmanWorkstation, name: RequireSecuritySignature, data: 1, type: dword }
+  - { rule: 2.3.8.2, path: LanmanWorkstation, name: EnableSecuritySignature, data: 1, type: dword }
+  - { rule: 2.3.8.3, path: LanmanWorkstation, name: EnablePlainTextPassword, data: 0, type: dword }
+  - { rule: 2.3.9.1, path: LanManServer, name: AutoDisconnect, data: 15, type: dword }
+  - { rule: 2.3.9.2, path: LanManServer, name: RequireSecuritySignature, data: 1, type: dword }
+  - { rule: 2.3.9.3, path: LanManServer, name: EnableSecuritySignature, data: 1, type: dword }
+  - { rule: 2.3.9.4, path: LanManServer, name: EnableForcedLogoff, data: 1, type: dword }
+  - { rule: 2.3.9.5, path: LanManServer, name: SMBServerNameHardeningLevel, data: 1, type: dword }
+  - { rule: 2.3.10.9, path: LanManServer, name: RestrictNullSessAccess, data: 1, type: dword }
+  - { rule: 2.3.10.10, path: LanManServer, name: NullSessionShares, data: '', type: string }
+  - { rule: 2.3.11.6, path: LanManServer, name: EnableForcedLogOff, data: 1, type: dword }
+
+- name: Deny anonymous SID/Name translation
+  win_security_policy:
+    section: System Access
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_items:
+  - { rule: 2.3.10.1, key: LSAAnonymousNameLookup, value: 0 }
+
+- name: LanMan Parameters
+  win_regedit:
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\{{ item.path }}\Parameters'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.10.6, path: LanManServer, name: NullSessionPipes, data: 'NETLOGON', type: string }
+
+- name: Winreg
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Control\SecurePipeServers\Winreg\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.10.7, path: AllowedExactPaths, name: Machine, data: ['System\CurrentControlSet\Control\ProductOptions', 'System\CurrentControlSet\Control\Server Applications', 'Software\Microsoft\Windows NT\CurrentVersion'], type: multistring }
+  - { rule: 2.3.10.8, path: AllowedPaths, name: Machine, data: ['System\CurrentControlSet\Control\Print\Printers', 'System\CurrentControlSet\Services\Eventlog', 'Software\Microsoft\OLAP Server', 'Software\Microsoft\Windows NT\CurrentVersion\Print', 'Software\Microsoft\Windows NT\CurrentVersion\Windows', 'System\CurrentControlSet\Control\ContentIndex', 'System\CurrentControlSet\Control\Terminal Server', 'System\CurrentControlSet\Control\Terminal Server\UserConfig', 'System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration', 'Software\Microsoft\Windows NT\CurrentVersion\Perflib', 'System\CurrentControlSet\Services\SysmonLog', 'System\CurrentControlSet\Services\CertSvc', 'System\CurrentControlSet\Services\WINS'], type: multistring }
+
+- name: Kerberos Parameters
+  win_regedit:
+    path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.11.4, name: SupportedEncryptionTypes, data: 2147483644, type: dword }
+
+- name: LDAP Service
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Services\LDAP'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.11.8, name: LDAPClientIntegrity, data: 1, type: dword }
+
+- name: Session Manager
+  win_regedit:
+    path: 'HKLM:\System\CurrentControlSet\Control\Session Manager\{{ item.path }}'
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+    state: present
+  with_items:
+  - { rule: 2.3.15.1, path: Kernel, name: ObCaseInsensitive, data: 1, type: dword }
+  - { rule: 2.3.15.2, path: Kernel, name: ProtectionMode, data: 1, type: dword }
+  - { rule: 2.3.16.1, path: Subsystems, name: Optional, data: '', type: string }

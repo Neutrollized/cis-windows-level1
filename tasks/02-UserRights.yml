@@ -1,0 +1,77 @@
+---
+- name: User Rights in Group Policy
+  win_user_right:
+    name: "{{ item.name }}"
+    users:
+    - Administrators
+    - Backup Operators
+    - Guests
+    - Power Users
+    - Print Operators
+    - Users
+    - BUILTIN\Certificate Service DCOM Access
+    - BUILTIN\Access Control Assistance Operators
+    - BUILTIN\Cryptographic Operators
+    - BUILTIN\Distributed COM Users
+    - BUILTIN\Event Log Readers
+    - BUILTIN\Hyper-V Administrators
+    - BUILTIN\Network Configuration Operators
+    - BUILTIN\Performance Log Users
+    - BUILTIN\Performance Monitor Users
+    - BUILTIN\RDS Endpoint Servers
+    - BUILTIN\RDS Management Servers
+    - BUILTIN\RDS Remote Access Servers
+    - BUILTIN\Remote Desktop Users
+    - BUILTIN\Remote Management Users
+    action: remove
+  with_items:
+  - { rule: 2.2.1, name: SeTrustedCredManAccessPrivilege }
+  - { rule: 2.2.2, name: SeNetworkLogonRight }
+  - { rule: 2.2.3, name: SeTcbPrivilege }
+  - { rule: 2.2.5, name: SeIncreaseQuotaPrivilege }
+  - { rule: 2.2.6, name: SeInteractiveLogonRight }
+  - { rule: 2.2.7, name: SeRemoteInteractiveLogonRight }
+  - { rule: 2.2.8, name: SeBackupPrivilege }
+  - { rule: 2.2.9, name: SeSystemtimePrivilege }
+  - { rule: 2.2.10, name: SeTimeZonePrivilege }
+  - { rule: 2.2.11, name: SeCreatePagefilePrivilege }
+  - { rule: 2.2.12, name: SeCreateTokenPrivilege }
+  - { rule: 2.2.13, name: SeCreateGlobalPrivilege }
+  - { rule: 2.2.14, name: SeCreatePermanentPrivilege }
+  - { rule: 2.2.15, name: SeCreateSymbolicLinkPrivilege }
+  - { rule: 2.2.16, name: SeDebugPrivilege }
+  - { rule: 2.2.17, name: SeDenyNetworkLogonRight }
+  - { rule: 2.2.18, name: SeDenyServiceLogonRight }
+  - { rule: 2.2.19, name: SeDenyInteractiveLogonRight }
+  - { rule: 2.2.20, name: SeDenyRemoteInteractiveLogonRight }
+  - { rule: 2.2.21, name: SeDenyRemoteInteractiveLogonRight }
+  - { rule: 2.2.22, name: SeEnableDelegationPrivilege }
+  - { rule: 2.2.23, name: SeRemoteShutdownPrivilege }
+  - { rule: 2.2.24, name: SeAuditPrivilege }
+  - { rule: 2.2.25, name: SeImpersonatePrivilege }
+  - { rule: 2.2.26, name: SeIncreaseBasePriorityPrivilege }
+  - { rule: 2.2.27, name: SeLoadDriverPrivilege }
+  - { rule: 2.2.28, name: SeLockMemoryPrivilege }
+  - { rule: 2.2.30, name: SeSecurityPrivilege }
+  - { rule: 2.2.31, name: SeRelabelPrivilege }
+  - { rule: 2.2.32, name: SeSystemEnvironmentPrivilege }
+  - { rule: 2.2.33, name: SeManageVolumePrivilege }
+  - { rule: 2.2.34, name: SeProfileSingleProcessPrivilege }
+  - { rule: 2.2.35, name: SeSystemProfilePrivilege }
+  - { rule: 2.2.36, name: SeAssignPrimaryTokenPrivilege }
+  - { rule: 2.2.37, name: SeRestorePrivilege }
+  - { rule: 2.2.38, name: SeShutdownPrivilege }
+  - { rule: 2.2.40, name: SeTakeOwnershipPrivilege }
+
+
+- name: User Rights in Group Policy
+  win_user_right:
+    name: "{{ item.name }}"
+    users:
+    - Guests
+    action: add
+  with_items:
+  - { rule: 2.2.18, name: SeDenyServiceLogonRight }
+  - { rule: 2.2.19, name: SeDenyInteractiveLogonRight }
+  - { rule: 2.2.20, name: SeDenyRemoteInteractiveLogonRight }
+  - { rule: 2.2.21, name: SeDenyRemoteInteractiveLogonRight }

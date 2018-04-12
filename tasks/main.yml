@@ -1,0 +1,23 @@
+---
+# tasks file for cis-windows-level1
+
+- name: Apply 1.x.x Rules
+  include_tasks: 01-SecurityPolicies.yml
+
+- name: Apply 2.x.x Rules
+  include_tasks: 02-UserRights.yml
+  include_tasks: 02-LocalAuth.yml
+
+- name: Apply 9.x.x Rules
+  include_tasks: 09-FirewallPolicies.yml
+
+- name: Apply 17.x.x Rules
+  include_tasks: 17-AuditPolicies.yml
+
+- name: Apply 18.x.x Rules
+  include_tasks: 18-SystemPolicies.yml
+
+# HKU won't allow new registry paths to be created in the root folder
+# https://docs.ansible.com/ansible/devel/modules/win_regedit_module.html#notes
+#- name: Apply 19.x.x Rules
+#  include_tasks: 19-HKUreg.yml
