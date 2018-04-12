@@ -7,7 +7,7 @@
 - name: CIS-L1 Local Authentication rules
   include_tasks: 02-LocalAuth.yml
 
-- name: CIS-L1 Firewall Policy  rules
+- name: CIS-L1 Firewall Policy rules
   include_tasks: 09-FirewallPolicies.yml
 
 - name: CIS-L1 Audity Policy rules
