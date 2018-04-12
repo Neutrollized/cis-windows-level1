@@ -31,7 +31,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_19.1.3.2_L1_Ensure_Force_specific_
   registry_key({hive: 'HKEY_USERS'}).children(/^S-1-5-21-[0-9]+-[0-9]+-[0-9]+-[0-9]{3,}$/).map { |x| x.to_s + "\\Software\\Policies\\Microsoft\\Windows\\Control Panel\\Desktop" }.each do |entry|
     describe registry_key(entry) do
       it { should have_property "SCRNSAVE.EXE" }
-      its("SCRNSAVE.EXE") { should eq "scrnsave.scr" }
+#      its("SCRNSAVE.EXE") { should eq "scrnsave.scr" }
+      it { should have_property_value('SCRNSAVE.EXE', :string, 'scrnsave.scr') }
     end
   end
 end

@@ -1,28 +1,28 @@
 ---
-- name: User Rights in Group Policy
+- name: remove User Rights in Group Policy
   win_user_right:
     name: "{{ item.name }}"
     users:
-    - Administrators
-    - Backup Operators
-    - Guests
-    - Power Users
-    - Print Operators
-    - Users
-    - BUILTIN\Certificate Service DCOM Access
-    - BUILTIN\Access Control Assistance Operators
-    - BUILTIN\Cryptographic Operators
-    - BUILTIN\Distributed COM Users
-    - BUILTIN\Event Log Readers
-    - BUILTIN\Hyper-V Administrators
-    - BUILTIN\Network Configuration Operators
-    - BUILTIN\Performance Log Users
-    - BUILTIN\Performance Monitor Users
-    - BUILTIN\RDS Endpoint Servers
-    - BUILTIN\RDS Management Servers
-    - BUILTIN\RDS Remote Access Servers
-    - BUILTIN\Remote Desktop Users
-    - BUILTIN\Remote Management Users
+    - 'BUILTIN\Access Control Assistance Operators'
+    - 'Administrators'
+    - 'Backup Operators'
+    - 'BUILTIN\Certificate Service DCOM Access'
+    - 'BUILTIN\Cryptographic Operators'
+    - 'BUILTIN\Distributed COM Users'
+    - 'BUILTIN\Event Log Readers'
+    - 'Guests'
+    - 'BUILTIN\Hyper-V Administrators'
+    - 'BUILTIN\Network Configuration Operators'
+    - 'BUILTIN\Performance Log Users'
+    - 'BUILTIN\Performance Monitor Users'
+    - 'Power Users'
+    - 'Print Operators'
+    - 'BUILTIN\RDS Endpoint Servers'
+    - 'BUILTIN\RDS Management Servers'
+    - 'BUILTIN\RDS Remote Access Servers'
+    - 'BUILTIN\Remote Desktop Users'
+    - 'BUILTIN\Remote Management Users'
+    - 'Users'
     action: remove
   with_items:
   - { rule: 2.2.1, name: SeTrustedCredManAccessPrivilege }
@@ -64,11 +64,11 @@
   - { rule: 2.2.40, name: SeTakeOwnershipPrivilege }
 
 
-- name: User Rights in Group Policy
+- name: add User Rights in Group Policy
   win_user_right:
     name: "{{ item.name }}"
     users:
-    - Guests
+    - 'Guests'
     action: add
   with_items:
   - { rule: 2.2.18, name: SeDenyServiceLogonRight }
