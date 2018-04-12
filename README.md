@@ -7,6 +7,11 @@ Created for and tested on Windows 2012R2
 Should work for Windows 2016 (untested)
 
 
+## Requirements
+
+Requires Ansible 2.5+ as the `win_audit_policy_system` module is required and it's new in 2.5
+
+
 ## Notes & Rule Omittance
 
 My testing was done on a Windows 2012R2 Vagrant box I built using [this](https://github.com/Neutrollized/packer-windows)
