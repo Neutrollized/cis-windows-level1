@@ -7,6 +7,11 @@ Created for and tested on Windows 2012R2
 Should work for Windows 2016 (untested)
 
 
+## TODO
+
+There's plenty of room for optimizing and consolidating regedits, etc.
+
+
 ## Requirements
 
 Requires Ansible 2.5+ as the `win_audit_policy_system` module is required and it's new in 2.5
