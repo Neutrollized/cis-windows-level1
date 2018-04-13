@@ -21,5 +21,5 @@
 
 # HKU won't allow new registry paths to be created in the root folder
 # https://docs.ansible.com/ansible/devel/modules/win_regedit_module.html#notes
-#- name: CIS-L1 HKEY_USER registry rules
+#- name: CIS-L1 HKEY_USER Registry rules
 #  include_tasks: 19-HKUreg.yml
