@@ -87,27 +87,18 @@
   with_items:
   - { rule: 18.3.12, name: WarningLevel, data: 90, type: dword }
 
-- name: Network Connections
+- name: Network
   win_regedit:
-    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections'
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\{{ item.path }}'
     name: "{{ item.name }}"
     data: "{{ item.data }}"
     type: "{{ item.type }}"
     state: present
   with_items:
-  - { rule: 18.4.11.2, name: NC_AllowNetBridge_NLA, data: 0, type: dword }
-  - { rule: 18.4.11.3, name: NC_StdDomainUserSetLocation, data: 1, type: dword }
-
-- name: Network Provider Hardened Paths
-  win_regedit:
-    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths'
-    name: "{{ item.name }}"
-    data: "{{ item.data }}"
-    type: "{{ item.type }}"
-    state: present
-  with_items:
-  - { rule: 18.4.14.1, name: '\\*\NETLOGON', data: '', type: string }
-  - { rule: 18.4.14.1, name: '\\*\SYSVOL', data: '', type: string }
+  - { rule: 18.4.11.2, path: 'Network Connections', name: NC_AllowNetBridge_NLA, data: 0, type: dword }
+  - { rule: 18.4.11.3, path: 'Network Connections', name: NC_StdDomainUserSetLocation, data: 1, type: dword }
+  - { rule: 18.4.14.1, path: 'NetworkProvider\HardenedPaths', name: '\\*\NETLOGON', data: '', type: string }
+  - { rule: 18.4.14.1, path: 'NetworkProvider\HardenedPaths', name: '\\*\SYSVOL', data: '', type: string }
 
 - name: Group Policy
   win_regedit:
@@ -224,7 +215,7 @@
   with_items:
   - { rule: 18.8.32.1, name: EnableAuthEpResolution, data: 1, type: dword }
 
-- name: System
+- name: System Policies
   win_regedit:
     path: 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
     name: "{{ item.name }}"
@@ -287,7 +278,7 @@
   with_items:
   - { rule: 18.9.24.1, name: Start, data: 2, type: dword }
 
-- name: EMET SysSettings
+- name: EMET Policies
   win_regedit:
     path: 'HKLM:\Software\Policies\Microsoft\EMET\{{ item.path }}'
     name: "{{ item.name }}"
@@ -375,26 +366,17 @@
   - { rule: 18.9.61.1, name: AutoDownload, data: 4, type: dword }
   - { rule: 18.9.61.2, name: DisableOSUpgrade, data: 1, type: dword }
 
-- name: Windows Error Reporting Consent
-  win_regedit:
-    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting\Consent'
-    name: "{{ item.name }}"
-    data: "{{ item.data }}"
-    type: "{{ item.type }}"
-    state: present
-  with_items:
-  - { rule: 18.9.70.2.1, name: DefaultConsent, data: 1, type: dword }
-
 - name: Windows Error Reporting
   win_regedit:
-    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting'
+    path: 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\{{ item.path }}'
     name: "{{ item.name }}"
     data: "{{ item.data }}"
     type: "{{ item.type }}"
     state: present
   with_items:
-  - { rule: 18.9.70.3, name: AutoApproveOSDumps, data: 0, type: dword }
-  - { rule: 18.9.75.1, name: DisableAutomaticRestartsSignOn, data: 0, type: dword }
+  - { rule: 18.9.70.2.1, path: 'Windows Error Reporting\Consent', name: DefaultConsent, data: 1, type: dword }
+  - { rule: 18.9.70.3, path: 'Windows Error Reporting', name: AutoApproveOSDumps, data: 0, type: dword }
+  - { rule: 18.9.75.1, path: 'Windows Error Reporting', name: DisableAutomaticRestartsSignOn, data: 0, type: dword }
 
 - name: Windows Installer
   win_regedit:
