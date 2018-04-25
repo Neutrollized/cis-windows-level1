@@ -32,7 +32,7 @@ Inspec controls taken from Chef Automate's CIS Windows Level 1 profile.
 
 - 2.2.x: User Rights rules moved to the end as setting them early will prevent some of the other changes in the "later" rules sets from being applied due to stripped rights
 
-Rules for 19.x.x aren't run as they modify HKEY_USERS and that's apparently not allowed :( And as such, the Inspec controls are in the test/integration/default/ folder rather than in controls/ (easier than commenting out the rules)
+Rules for 19.x.x aren't run as they modify HKEY_USERS and that's apparently not allowed :( And as such, the Inspec controls for 19.x.x are in files/ folder for now rather than in controls/ (easier than commenting out the rules)
 
 
 # Maintainer
