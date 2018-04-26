@@ -35,6 +35,9 @@ Inspec controls taken from Chef Automate's CIS Windows Level 1 profile.
 Rules for 19.x.x aren't run as they modify HKEY_USERS and that's apparently not allowed :( And as such, the Inspec controls for 19.x.x are in files/ folder for now rather than in controls/ (easier than commenting out the rules)
 
 
+Rules 2.3.10.7 and 2.3.10.8's lists were done in YAML format rather than JSON like all the other rules.  The main reason is for better readability in this case where as JSON format took up less lines. 
+
+
 # Maintainer
 
 Glen Yu

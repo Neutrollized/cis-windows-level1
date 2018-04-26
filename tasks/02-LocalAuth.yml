@@ -140,8 +140,32 @@
     type: "{{ item.type }}"
     state: present
   with_items:
-  - { rule: 2.3.10.7, path: AllowedExactPaths, name: Machine, data: ['System\CurrentControlSet\Control\ProductOptions', 'System\CurrentControlSet\Control\Server Applications', 'Software\Microsoft\Windows NT\CurrentVersion'], type: multistring }
-  - { rule: 2.3.10.8, path: AllowedPaths, name: Machine, data: ['System\CurrentControlSet\Control\Print\Printers', 'System\CurrentControlSet\Services\Eventlog', 'Software\Microsoft\OLAP Server', 'Software\Microsoft\Windows NT\CurrentVersion\Print', 'Software\Microsoft\Windows NT\CurrentVersion\Windows', 'System\CurrentControlSet\Control\ContentIndex', 'System\CurrentControlSet\Control\Terminal Server', 'System\CurrentControlSet\Control\Terminal Server\UserConfig', 'System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration', 'Software\Microsoft\Windows NT\CurrentVersion\Perflib', 'System\CurrentControlSet\Services\SysmonLog', 'System\CurrentControlSet\Services\CertSvc', 'System\CurrentControlSet\Services\WINS'], type: multistring }
+  - rule: 2.3.10.7
+    path: AllowedExactPaths
+    name: Machine
+    data:
+    - 'System\CurrentControlSet\Control\ProductOptions'
+    - 'System\CurrentControlSet\Control\Server Applications'
+    - 'Software\Microsoft\Windows NT\CurrentVersion'
+    type: multistring
+  - rule: 2.3.10.8
+    path: AllowedPaths
+    name: Machine
+    data:
+    - 'System\CurrentControlSet\Control\Print\Printers'
+    - 'System\CurrentControlSet\Services\Eventlog'
+    - 'Software\Microsoft\OLAP Server'
+    - 'Software\Microsoft\Windows NT\CurrentVersion\Print'
+    - 'Software\Microsoft\Windows NT\CurrentVersion\Windows'
+    - 'System\CurrentControlSet\Control\ContentIndex'
+    - 'System\CurrentControlSet\Control\Terminal Server'
+    - 'System\CurrentControlSet\Control\Terminal Server\UserConfig'
+    - 'System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration'
+    - 'Software\Microsoft\Windows NT\CurrentVersion\Perflib'
+    - 'System\CurrentControlSet\Services\SysmonLog'
+    - 'System\CurrentControlSet\Services\CertSvc'
+    - 'System\CurrentControlSet\Services\WINS'
+    type: multistring
 
 - name: Kerberos Parameters
   win_regedit:
